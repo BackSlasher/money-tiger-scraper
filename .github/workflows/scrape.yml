@@ -1,0 +1,23 @@
+name: Scrape
+
+on:
+  schedule:
+    # 1 am UTC every day
+    - cron: "0 1 * * *" 
+  workflow_dispatch:
+env:
+  IMAGE_NAME: backslasher/money-tiger-scraper:latest
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull image
+        run: docker pull $IMAGE_NAME
+      - name: Run scraper
+        run: docker run --rm
+          -e CONFIG
+          -e API_TOKEN
+          $IMAGE_NAME
+        env:
+          CONFIG: "${{ secrets.CONFIG }}"
+          API_TOKEN: "${{ secrets.API_TOKEN }}"
